@@ -1,19 +1,42 @@
 """Flask app: serves the dig++ frontend and a JSON DNS lookup/trace API."""
 
+import json
 import logging
 import os
 
-from flask import Flask, jsonify, request
+from flask import Flask, Response, jsonify, request
+
+try:
+    from dotenv import load_dotenv
+
+    load_dotenv()
+except ImportError:
+    # python-dotenv is optional; env vars can also be set by the environment
+    # (e.g. docker-compose env_file) without it.
+    pass
 
 import dnstools
 
 app = Flask(__name__, static_folder="static", static_url_path="")
 logging.basicConfig(level=logging.INFO)
 
+# Client-side analytics config, injected into the page via /config.js. These
+# are not secrets (they ship to the browser); env vars just keep them out of
+# source and configurable per deployment. Empty app key disables analytics.
+APTABASE_APP_KEY = os.environ.get("APTABASE_APP_KEY", "")
+APTABASE_HOST = os.environ.get("APTABASE_HOST", "")
+
 
 @app.route("/")
 def index():
     return app.send_static_file("index.html")
+
+
+@app.route("/config.js")
+def config_js():
+    cfg = {"appKey": APTABASE_APP_KEY, "host": APTABASE_HOST}
+    body = "window.APTABASE_CONFIG = %s;" % json.dumps(cfg)
+    return Response(body, mimetype="text/javascript")
 
 
 @app.route("/api/dig", methods=["POST"])

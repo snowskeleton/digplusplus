@@ -15,8 +15,18 @@
 // identified, this needs no cookie/consent banner.
 
 (function () {
-  const APP_KEY = "A-SH-5537273296";
-  const HOST = "https://metrics.snowskeleton.net";
+  // Config is injected by the server from environment variables (see
+  // /config.js and app.py). If it's missing or has no app key, analytics is
+  // disabled and track() becomes a no-op.
+  const cfg = window.APTABASE_CONFIG || {};
+  const APP_KEY = cfg.appKey || "";
+  const HOST = (cfg.host || "").replace(/\/+$/, "");
+
+  if (!APP_KEY || !HOST) {
+    window.track = function () {};
+    return;
+  }
+
   const API_URL = HOST + "/api/v0/event";
   const SDK_VERSION = "digplusplus-web@1.0.0";
   const SESSION_TIMEOUT_S = 60 * 60; // 1h of inactivity starts a fresh session

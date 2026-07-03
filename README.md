@@ -63,9 +63,24 @@ It is privacy-first and needs no cookie/consent banner:
 - Events sent: `dns_query` (record type, mode), `email_check` (which check),
   `copy_record`, and `lookup_error`. No domains, no personal data.
 
-To disable, remove the `<script src="metrics.js">` tag from
-[`static/index.html`](static/index.html). To point at your own Aptabase
-instance, edit `APP_KEY`/`HOST` in [`static/metrics.js`](static/metrics.js).
+### Configuration
+
+The app key and host are read from environment variables (not hardcoded) and
+served to the browser via `/config.js`:
+
+```bash
+cp .env.example .env
+# then edit .env:
+#   APTABASE_APP_KEY=A-SH-xxxxxxxx
+#   APTABASE_HOST=https://metrics.example.com
+```
+
+Docker Compose reads `.env` automatically (`env_file`); for local runs
+`python-dotenv` loads it. **Leave `APTABASE_APP_KEY` empty to disable
+analytics entirely** — no requests are made and `track()` becomes a no-op.
+
+> Note: these values ship to the browser, so they are not secrets — env vars
+> just keep them out of source and configurable per deployment.
 
 ## Stack
 
