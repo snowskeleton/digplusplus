@@ -12,6 +12,12 @@ const checkButtons = document.querySelectorAll(".check-tab");
 // { kind: "type", value: "A" } or { kind: "check", value: "spf" }
 let activeMode = { kind: "type", value: "A" };
 
+// Anonymous usage analytics (see metrics.js). No-op if the metrics script
+// failed to load, so tracking can never break the app.
+function track(eventName, props) {
+  if (typeof window.track === "function") window.track(eventName, props);
+}
+
 traceCheckbox.addEventListener("change", () => {
   const disabled = traceCheckbox.checked;
   serverInput.disabled = disabled;
@@ -90,6 +96,7 @@ function copyButton(getText, label = "Copy") {
   btn.type = "button";
   btn.addEventListener("click", async () => {
     const ok = await copyText(getText());
+    track("copy_record", { label: label });
     btn.textContent = ok ? "Copied!" : "Failed";
     btn.classList.toggle("copied", ok);
     setTimeout(() => {
@@ -381,12 +388,20 @@ async function runQuery() {
     trace: traceCheckbox.checked,
   };
 
+  track("dns_query", {
+    type: payload.type,
+    domain: domainInput.value.trim(),
+    mode: payload.trace ? "trace" : payload.short ? "short" : "full",
+    custom_server: Boolean(payload.server),
+  });
+
   let data;
   try {
     data = await apiPost("/api/dig", payload);
   } catch (err) {
     clearResults();
     showError(err.message);
+    track("lookup_error", { kind: payload.type, message: err.message });
     return;
   }
 
@@ -416,12 +431,15 @@ async function runCheck(check) {
   clearError();
   showLoading();
 
+  track("email_check", { check: check, domain: domainInput.value.trim() });
+
   let data;
   try {
     data = await apiPost(`/api/${check}`, { domain: domainInput.value });
   } catch (err) {
     clearResults();
     showError(err.message);
+    track("lookup_error", { kind: check, message: err.message });
     return;
   }
 

@@ -51,6 +51,22 @@ All endpoints accept `POST` with a JSON body and return JSON.
 
 Each accepts `{ "domain": "example.com" }` and returns parsed results for the respective check.
 
+## Analytics
+
+The frontend reports anonymous **usage** metrics to a self-hosted
+[Aptabase](https://aptabase.com) instance (see [`static/metrics.js`](static/metrics.js)).
+It is privacy-first and needs no cookie/consent banner:
+
+- No cookies, no `localStorage`, no persistent identifiers.
+- The session id lives only in memory and resets after an hour of inactivity,
+  so visitors are never linked across visits.
+- Events sent: `dns_query` (record type, domain, mode), `email_check`
+  (which check, domain), `copy_record`, and `lookup_error`. No personal data.
+
+To disable, remove the `<script src="metrics.js">` tag from
+[`static/index.html`](static/index.html). To point at your own Aptabase
+instance, edit `APP_KEY`/`HOST` in [`static/metrics.js`](static/metrics.js).
+
 ## Stack
 
 - [Flask](https://flask.palletsprojects.com/) — web framework
