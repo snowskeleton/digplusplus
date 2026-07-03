@@ -18,6 +18,8 @@ function track(eventName, props) {
   if (typeof window._metricsTrack === "function") window._metricsTrack(eventName, props);
 }
 
+const ADVANCED_TYPES = new Set(["ANY", "CAA", "DNSKEY", "DS", "PTR", "SOA", "SRV", "TLSA", "TSIG"]);
+
 traceCheckbox.addEventListener("change", () => {
   const disabled = traceCheckbox.checked;
   serverInput.disabled = disabled;
@@ -42,7 +44,9 @@ typeButtons.forEach((btn) => {
   btn.addEventListener("click", () => {
     clearActiveTab();
     btn.classList.add("active");
-    activeMode = { kind: "type", value: btn.dataset.type };
+    const type = btn.dataset.type;
+    activeMode = { kind: "type", value: type };
+    track(ADVANCED_TYPES.has(type) ? "advanced_" + type : type);
     if (domainInput.value.trim()) {
       runQuery();
     }
@@ -388,11 +392,9 @@ async function runQuery() {
     trace: traceCheckbox.checked,
   };
 
-  track("dns_query", {
-    type: payload.type,
-    mode: payload.trace ? "trace" : payload.short ? "short" : "full",
-    custom_server: Boolean(payload.server),
-  });
+  if (payload.trace) track("advanced_trace");
+  else if (payload.short) track("advanced_short");
+  if (payload.server) track("advanced_custom_server");
 
   let data;
   try {
@@ -430,7 +432,7 @@ async function runCheck(check) {
   clearError();
   showLoading();
 
-  track("email_check", { check: check });
+  track(check);
 
   let data;
   try {
