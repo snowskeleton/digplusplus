@@ -15,7 +15,7 @@ let activeMode = { kind: "type", value: "A" };
 // Anonymous usage analytics (see metrics.js). No-op if the metrics script
 // failed to load, so tracking can never break the app.
 function track(eventName, props) {
-  if (typeof window.track === "function") window.track(eventName, props);
+  if (typeof window._metricsTrack === "function") window._metricsTrack(eventName, props);
 }
 
 traceCheckbox.addEventListener("change", () => {

@@ -23,7 +23,7 @@
   const HOST = (cfg.host || "").replace(/\/+$/, "");
 
   if (!APP_KEY || !HOST) {
-    window.track = function () {};
+    window._metricsTrack = function () {};
     return;
   }
 
@@ -63,7 +63,7 @@
 
   // Fire-and-forget. Analytics must never surface an error to the user or
   // interfere with a lookup, so failures are swallowed silently.
-  window.track = function track(eventName, props) {
+  window._metricsTrack = function (eventName, props) {
     let body;
     try {
       body = JSON.stringify({
