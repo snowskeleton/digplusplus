@@ -467,13 +467,27 @@ def _check_dkim(domain, resolver):
         for rdata in answer.rrset:
             txt = b"".join(rdata.strings).decode("utf-8", "replace")
             if "v=dkim1" in txt.lower():
-                return {
+                records = []
+                # If the resolver followed a CNAME, fetch and prepend it.
+                if answer.canonical_name.to_text() != dns.name.from_text(name).to_text():
+                    try:
+                        cname_answer = resolver.resolve(name, "CNAME", raise_on_no_answer=False)
+                        if cname_answer.rrset is not None:
+                            records.append({
+                                "name": cname_answer.rrset.name.to_text(),
+                                "ttl": cname_answer.rrset.ttl,
+                                "type": "CNAME",
+                                "data": cname_answer.rrset[0].target.to_text(),
+                            })
+                    except dns.exception.DNSException:
+                        pass
+                records.append({
                     "name": answer.rrset.name.to_text(),
                     "ttl": answer.rrset.ttl,
                     "type": "TXT",
                     "data": txt,
-                    "selector": selector,
-                }
+                })
+                return {"selector": selector, "records": records}
         return None
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=8) as pool:
@@ -482,7 +496,7 @@ def _check_dkim(domain, resolver):
     return {
         "selectors_checked": len(DKIM_SELECTORS),
         "selectors_found": [r["selector"] for r in results],
-        "records": results,
+        "records": [rec for r in results for rec in r["records"]],
     }
 
 
