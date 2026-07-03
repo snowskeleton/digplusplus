@@ -458,9 +458,22 @@ DKIM_SELECTORS = [
 def _check_dkim(domain, resolver):
     def probe(selector):
         name = f"{selector}._domainkey.{domain}"
-        for txt in _resolve_txt_strings(resolver, name):
+        try:
+            answer = resolver.resolve(name, "TXT", raise_on_no_answer=False)
+        except dns.exception.DNSException:
+            return None
+        if answer.rrset is None:
+            return None
+        for rdata in answer.rrset:
+            txt = b"".join(rdata.strings).decode("utf-8", "replace")
             if "v=dkim1" in txt.lower():
-                return (selector, txt)
+                return {
+                    "name": answer.rrset.name.to_text(),
+                    "ttl": answer.rrset.ttl,
+                    "type": "TXT",
+                    "data": txt,
+                    "selector": selector,
+                }
         return None
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=8) as pool:
@@ -468,8 +481,8 @@ def _check_dkim(domain, resolver):
 
     return {
         "selectors_checked": len(DKIM_SELECTORS),
-        "selectors_found": [s for s, _ in results],
-        "selectors_records": {s: txt for s, txt in results},
+        "selectors_found": [r["selector"] for r in results],
+        "records": results,
     }
 
 

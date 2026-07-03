@@ -283,11 +283,14 @@ function renderDmarc(dmarc) {
 
 function renderDkim(dkim) {
   const section = esSection("DKIM (Common Selectors)");
-  if (dkim.selectors_found.length) {
-    const records = dkim.selectors_records || {};
-    dkim.selectors_found.forEach(selector => {
-      section.appendChild(fieldRow(selector, records[selector] || ""));
-    });
+  const records = dkim.records || [];
+  if (records.length) {
+    if (records.length > 1) {
+      const header = el("div", "card-header");
+      header.appendChild(copyButton(() => records.map((r) => digLine(r, null)).join("\n"), "Copy all"));
+      section.appendChild(header);
+    }
+    records.forEach((r) => section.appendChild(answerBlock(r, null)));
   } else {
     section.appendChild(
       el(
