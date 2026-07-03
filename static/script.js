@@ -8,7 +8,9 @@ const shortCheckbox = document.getElementById("short");
 const typeButtons = document.querySelectorAll(".type-tab:not(.check-tab)");
 const checkButtons = document.querySelectorAll(".check-tab");
 
-let selectedType = "A";
+// activeMode tracks what's currently selected across both rows.
+// { kind: "type", value: "A" } or { kind: "check", value: "spf" }
+let activeMode = { kind: "type", value: "A" };
 
 traceCheckbox.addEventListener("change", () => {
   const disabled = traceCheckbox.checked;
@@ -21,11 +23,20 @@ function clearActiveTab() {
   checkButtons.forEach((b) => b.classList.remove("active"));
 }
 
+function runActive() {
+  if (!domainInput.value.trim()) return;
+  if (activeMode.kind === "check") {
+    runCheck(activeMode.value);
+  } else {
+    runQuery();
+  }
+}
+
 typeButtons.forEach((btn) => {
   btn.addEventListener("click", () => {
     clearActiveTab();
     btn.classList.add("active");
-    selectedType = btn.dataset.type;
+    activeMode = { kind: "type", value: btn.dataset.type };
     if (domainInput.value.trim()) {
       runQuery();
     }
@@ -364,7 +375,7 @@ async function runQuery() {
 
   const payload = {
     domain: domainInput.value,
-    type: selectedType,
+    type: activeMode.value,
     server: serverInput.value.trim() || null,
     short: shortCheckbox.checked,
     trace: traceCheckbox.checked,
@@ -391,7 +402,7 @@ async function runQuery() {
 
 form.addEventListener("submit", (event) => {
   event.preventDefault();
-  runQuery();
+  runActive();
 });
 
 const CHECK_RENDERERS = {
@@ -428,6 +439,7 @@ checkButtons.forEach((btn) => {
     }
     clearActiveTab();
     btn.classList.add("active");
+    activeMode = { kind: "check", value: btn.dataset.check };
     runCheck(btn.dataset.check);
   });
 });
