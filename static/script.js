@@ -390,7 +390,6 @@ async function runQuery() {
 
   track("dns_query", {
     type: payload.type,
-    domain: domainInput.value.trim(),
     mode: payload.trace ? "trace" : payload.short ? "short" : "full",
     custom_server: Boolean(payload.server),
   });
@@ -431,7 +430,7 @@ async function runCheck(check) {
   clearError();
   showLoading();
 
-  track("email_check", { check: check, domain: domainInput.value.trim() });
+  track("email_check", { check: check });
 
   let data;
   try {
