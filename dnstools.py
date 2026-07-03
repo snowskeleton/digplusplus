@@ -460,13 +460,17 @@ def _check_dkim(domain, resolver):
         name = f"{selector}._domainkey.{domain}"
         for txt in _resolve_txt_strings(resolver, name):
             if "v=dkim1" in txt.lower():
-                return selector
+                return (selector, txt)
         return None
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=8) as pool:
-        found = [s for s in pool.map(probe, DKIM_SELECTORS) if s]
+        results = [r for r in pool.map(probe, DKIM_SELECTORS) if r]
 
-    return {"selectors_checked": len(DKIM_SELECTORS), "selectors_found": found}
+    return {
+        "selectors_checked": len(DKIM_SELECTORS),
+        "selectors_found": [s for s, _ in results],
+        "selectors_records": {s: txt for s, txt in results},
+    }
 
 
 MX_PROVIDER_PATTERNS = [

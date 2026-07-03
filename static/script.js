@@ -284,7 +284,10 @@ function renderDmarc(dmarc) {
 function renderDkim(dkim) {
   const section = esSection("DKIM (Common Selectors)");
   if (dkim.selectors_found.length) {
-    section.appendChild(fieldRow("Found selectors", dkim.selectors_found.join(", ")));
+    const records = dkim.selectors_records || {};
+    dkim.selectors_found.forEach(selector => {
+      section.appendChild(fieldRow(selector, records[selector] || ""));
+    });
   } else {
     section.appendChild(
       el(
