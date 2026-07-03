@@ -2,8 +2,8 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "diggui",
-      "runtimeExecutable": ".venv/bin/python",
+      "name": "digplusplus",
+      "runtimeExecutable": ".venv/bin/python3.12",
       "runtimeArgs": ["app.py"],
       "port": 5050
     }

@@ -1,4 +1,4 @@
-"""Flask app: serves the diggui frontend and a JSON DNS lookup/trace API."""
+"""Flask app: serves the dig++ frontend and a JSON DNS lookup/trace API."""
 
 import logging
 import os

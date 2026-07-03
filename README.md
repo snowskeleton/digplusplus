@@ -1,4 +1,4 @@
-# diggui
+# dig++
 
 A web-based DNS toolkit. Look up DNS records, trace resolution paths from the root servers, and check email authentication configuration (SPF, DKIM, DMARC) and domain registrar info — all from a browser, with no `dig` binary required.
 

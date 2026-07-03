@@ -15,7 +15,7 @@ def client():
 def test_index_serves_html(client):
     resp = client.get("/")
     assert resp.status_code == 200
-    assert b"diggui" in resp.data
+    assert b"dig++" in resp.data
 
 
 def test_non_json_body_is_invalid_input(client):
