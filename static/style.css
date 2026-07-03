@@ -1,6 +1,44 @@
 :root {
   color-scheme: light dark;
   --accent: #00897b;
+
+  --bg:          #fafafa;
+  --bg-card:     #ffffff;
+  --bg-hover:    #eeeeee;
+  --bg-hop:      #fafafa;
+  --bg-error:    #fdd;
+  --text:        #111111;
+  --text-muted:  #555555;
+  --text-faint:  #777777;
+  --text-meta:   #888888;
+  --text-value:  #222222;
+  --text-error:  #900;
+  --text-warn:   #a3221f;
+  --border:      #dddddd;
+  --border-soft: #eeeeee;
+  --border-input:#cccccc;
+  --border-error:#cc3333;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg:          #121212;
+    --bg-card:     #1e1e1e;
+    --bg-hover:    #2a2a2a;
+    --bg-hop:      #1a1a1a;
+    --bg-error:    #3b1111;
+    --text:        #e8e8e8;
+    --text-muted:  #aaaaaa;
+    --text-faint:  #888888;
+    --text-meta:   #777777;
+    --text-value:  #dddddd;
+    --text-error:  #ff8080;
+    --text-warn:   #f08080;
+    --border:      #333333;
+    --border-soft: #2a2a2a;
+    --border-input:#444444;
+    --border-error:#cc3333;
+  }
 }
 
 * {
@@ -10,7 +48,8 @@
 body {
   font-family: system-ui, -apple-system, sans-serif;
   margin: 0;
-  background: #fafafa;
+  background: var(--bg);
+  color: var(--text);
 }
 
 .topbar {
@@ -36,8 +75,10 @@ body {
   flex: 1;
   padding: 0.6rem 0.75rem;
   font-size: 1rem;
-  border: 1px solid #ccc;
+  border: 1px solid var(--border-input);
   border-radius: 4px;
+  background: var(--bg-card);
+  color: var(--text);
 }
 
 #domain:focus {
@@ -63,7 +104,7 @@ button {
 .type-tabs {
   display: flex;
   flex-wrap: wrap;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid var(--border);
   margin-top: 1rem;
 }
 
@@ -73,7 +114,7 @@ button {
   padding: 0.5rem 0.4rem;
   margin: 2px;
   font-size: 0.8rem;
-  color: #333;
+  color: var(--text);
   background: none;
   border: none;
   border-radius: 999px;
@@ -81,7 +122,7 @@ button {
 }
 
 .type-tab:hover {
-  background: #eee;
+  background: var(--bg-hover);
 }
 
 .type-tab.active {
@@ -91,7 +132,7 @@ button {
 
 details {
   margin-top: 0.75rem;
-  border: 1px solid #ccc;
+  border: 1px solid var(--border-input);
   border-radius: 4px;
   padding: 0.5rem 0.75rem;
 }
@@ -114,7 +155,7 @@ summary {
 }
 
 .check-tab:hover {
-  background: rgba(0, 137, 123, 0.08);
+  background: rgba(0, 137, 123, 0.12);
 }
 
 .advanced-row {
@@ -139,7 +180,7 @@ summary {
 
 .es-section {
   padding: 0.75rem 0;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--border-soft);
 }
 
 .es-section:last-child {
@@ -157,10 +198,10 @@ summary {
 .error {
   margin-top: 1rem;
   padding: 0.5rem 0.75rem;
-  background: #fdd;
-  border: 1px solid #c33;
+  background: var(--bg-error);
+  border: 1px solid var(--border-error);
   border-radius: 4px;
-  color: #900;
+  color: var(--text-error);
 }
 
 .results {
@@ -168,8 +209,8 @@ summary {
 }
 
 .result-card {
-  background: #fff;
-  border: 1px solid #ddd;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
   border-radius: 6px;
   padding: 1.25rem;
 }
@@ -179,7 +220,7 @@ summary {
 }
 
 .empty-note {
-  color: #777;
+  color: var(--text-faint);
   font-style: italic;
   margin: 0;
 }
@@ -187,7 +228,7 @@ summary {
 .answer-block {
   position: relative;
   padding: 0.75rem 3.75rem 0.75rem 0;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--border-soft);
 }
 
 .answer-block:last-child {
@@ -202,11 +243,11 @@ summary {
 
 .copy-btn {
   background: none;
-  border: 1px solid #ccc;
+  border: 1px solid var(--border-input);
   border-radius: 4px;
   padding: 0.15rem 0.5rem;
   font-size: 0.75rem;
-  color: #555;
+  color: var(--text-muted);
   cursor: pointer;
   line-height: 1.4;
   white-space: nowrap;
@@ -214,8 +255,8 @@ summary {
 }
 
 .copy-btn:hover {
-  background: #f0f0f0;
-  border-color: #999;
+  background: var(--bg-hover);
+  border-color: var(--text-faint);
 }
 
 .copy-btn.copied {
@@ -239,22 +280,22 @@ summary {
 
 .field-label {
   font-weight: 600;
-  color: #555;
+  color: var(--text-muted);
 }
 
 .field-value {
-  color: #222;
+  color: var(--text-value);
   word-break: break-all;
 }
 
 .result-footer {
   margin-top: 0.75rem;
   font-size: 0.8rem;
-  color: #888;
+  color: var(--text-meta);
 }
 
 .result-footer.warn {
-  color: #a3221f;
+  color: var(--text-warn);
 }
 
 .short-list, .referral-list {
@@ -282,7 +323,7 @@ summary {
 .hop-card {
   border-left: 3px solid var(--accent);
   padding: 0.5rem 0.75rem;
-  background: #fafafa;
+  background: var(--bg-hop);
   border-radius: 0 4px 4px 0;
 }
 
@@ -293,12 +334,12 @@ summary {
   gap: 0.5rem;
   margin-bottom: 0.4rem;
   font-size: 0.85rem;
-  color: #555;
+  color: var(--text-muted);
 }
 
 .hop-step {
   font-weight: 600;
-  color: #333;
+  color: var(--text);
 }
 
 .hop-detail {
