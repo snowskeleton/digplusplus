@@ -158,6 +158,12 @@ summary {
   background: rgba(0, 137, 123, 0.12);
 }
 
+.check-tab.active {
+  background: var(--accent);
+  color: #fff;
+  border-style: solid;
+}
+
 .advanced-row {
   display: flex;
   flex-wrap: wrap;

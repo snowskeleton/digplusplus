@@ -16,9 +16,14 @@ traceCheckbox.addEventListener("change", () => {
   shortCheckbox.disabled = disabled;
 });
 
+function clearActiveTab() {
+  typeButtons.forEach((b) => b.classList.remove("active"));
+  checkButtons.forEach((b) => b.classList.remove("active"));
+}
+
 typeButtons.forEach((btn) => {
   btn.addEventListener("click", () => {
-    typeButtons.forEach((b) => b.classList.remove("active"));
+    clearActiveTab();
     btn.classList.add("active");
     selectedType = btn.dataset.type;
     if (domainInput.value.trim()) {
@@ -421,6 +426,8 @@ checkButtons.forEach((btn) => {
       showError("Enter a domain first.");
       return;
     }
+    clearActiveTab();
+    btn.classList.add("active");
     runCheck(btn.dataset.check);
   });
 });
