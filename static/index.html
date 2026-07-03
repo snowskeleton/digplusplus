@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>diggui</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">diggui</header>
+
+  <main class="container">
+    <form id="dig-form">
+      <div class="row">
+        <input type="text" id="domain" name="domain" placeholder="example.com" required autofocus>
+        <button type="submit" class="visually-hidden">Dig</button>
+      </div>
+
+      <div id="type-tabs" class="type-tabs" role="group" aria-label="Record type">
+        <button type="button" class="type-tab active" data-type="A">A</button>
+        <button type="button" class="type-tab" data-type="AAAA">AAAA</button>
+        <button type="button" class="type-tab" data-type="CNAME">CNAME</button>
+        <button type="button" class="type-tab" data-type="MX">MX</button>
+        <button type="button" class="type-tab" data-type="NS">NS</button>
+        <button type="button" class="type-tab" data-type="TXT">TXT</button>
+      </div>
+
+      <div id="check-tabs" class="type-tabs check-tabs" role="group" aria-label="Email security checks">
+        <button type="button" class="type-tab check-tab" data-check="registrar">Registrar</button>
+        <button type="button" class="type-tab check-tab" data-check="spf">SPF</button>
+        <button type="button" class="type-tab check-tab" data-check="dmarc">DMARC</button>
+        <button type="button" class="type-tab check-tab" data-check="dkim">DKIM</button>
+      </div>
+
+      <details>
+        <summary>Advanced</summary>
+        <div id="type-tabs-more" class="type-tabs type-tabs-more" role="group" aria-label="More record types">
+          <button type="button" class="type-tab" data-type="ANY">ANY</button>
+          <button type="button" class="type-tab" data-type="CAA">CAA</button>
+          <button type="button" class="type-tab" data-type="DNSKEY">DNSKEY</button>
+          <button type="button" class="type-tab" data-type="DS">DS</button>
+          <button type="button" class="type-tab" data-type="PTR">PTR</button>
+          <button type="button" class="type-tab" data-type="SOA">SOA</button>
+          <button type="button" class="type-tab" data-type="SRV">SRV</button>
+          <button type="button" class="type-tab" data-type="TLSA">TLSA</button>
+          <button type="button" class="type-tab" data-type="TSIG">TSIG</button>
+        </div>
+        <div class="advanced-row">
+          <label>
+            Server
+            <input type="text" id="server" name="server" placeholder="8.8.8.8 (default: system)">
+          </label>
+          <label class="checkbox">
+            <input type="checkbox" id="short" name="short">
+            Short output (+short)
+          </label>
+          <label class="checkbox">
+            <input type="checkbox" id="trace" name="trace">
+            Trace (+trace)
+          </label>
+        </div>
+      </details>
+
+    </form>
+
+    <div id="error" class="error" hidden></div>
+    <div id="results" class="results"></div>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
