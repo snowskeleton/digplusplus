@@ -3,7 +3,7 @@
   "configurations": [
     {
       "name": "digplusplus",
-      "runtimeExecutable": ".venv/bin/python3.12",
+      "runtimeExecutable": ".venv/bin/python3",
       "runtimeArgs": ["app.py"],
       "port": 5050
     }
